@@ -1,0 +1,53 @@
+{% extends 'projects/base.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-5 mb-3">Django Project Manager</h2>
+    <div class="card">
+        <div class="card-header">
+            <a class="btn btn-outline-primary" href="{% url "project_new" %}"> 
+                Create New Project
+            </a>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="alert alert-success">
+                            <b>{{ message }}</b>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <table class="table table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th width="240px">Action</th>
+                </tr>
+                {% for project in projects %}
+                <tr>
+                    <td>{{ project.name }}</td>
+                    <td>{{ project.description }}</td>
+                    <td>
+                        <a
+                            class="btn btn-outline-info"
+                            href="{% url "project_show" project.id %}">
+                            Show
+                        </a>
+                        <a
+                            class="btn btn-outline-success"
+                            href="{% url "project_edit" project.id %}">
+                            Edit
+                        </a>
+                        <form method="post" action="{% url "project_delete" project.id %}">{% csrf_token %}
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
